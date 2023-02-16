@@ -91,6 +91,16 @@
             ],
             "scripts": []
           }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {
+            "prerender": false,
+            "ssr": false,
+            "browserTarget": "puntos-de-reciclaje:build:production",
+            "firebaseProject": "puntos-de-reciclaje-88753",
+            "firebaseHostingSite": "puntos-de-reciclaje-88753"
+          }
         }
       }
     }

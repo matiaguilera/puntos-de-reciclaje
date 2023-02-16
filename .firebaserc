@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "puntos-de-reciclaje-88753": {
+      "hosting": {
+        "puntos-de-reciclaje": [
+          "puntos-de-reciclaje-88753"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "puntos-de-reciclaje-88753"
+  }
+}
