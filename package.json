@@ -20,6 +20,10 @@
     "@angular/platform-browser": "^15.1.0",
     "@angular/platform-browser-dynamic": "^15.1.0",
     "@angular/router": "^15.1.0",
+    "@turf/boolean-disjoint": "^6.5.0",
+    "@turf/buffer": "^6.5.0",
+    "@turf/line-intersect": "^6.5.0",
+    "mapbox-gl": "^2.12.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.12.0"
@@ -29,6 +33,7 @@
     "@angular/cli": "~15.1.5",
     "@angular/compiler-cli": "^15.1.0",
     "@types/jasmine": "~4.3.0",
+    "@types/mapbox-gl": "^2.7.10",
     "autoprefixer": "^10.4.13",
     "jasmine-core": "~4.5.0",
     "karma": "~6.4.0",
