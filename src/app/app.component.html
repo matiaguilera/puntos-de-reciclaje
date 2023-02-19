@@ -1,79 +1,82 @@
 <div
-  class="absolute top-0 left-0 h-screen w-screen bg-white z-10 overflow-x-hidden md:w-1/3"
+  *ngIf="showMenu"
+  class="absolute top-0 left-0 h-screen w-screen bg-white z-10 overflow-x-hidden sm:w-96 shadow"
 >
   <h1 class="text-3xl m-3 text-center">Centros de reciclaje</h1>
-  <div class="flex justify-center">
-    <select class="border rounded p-2 m-2">
-      <option>Por distancia</option>
-      <option>Por nombre</option>
+  <div class="flex justify-center items-center gap-2">
+    <select (change)="changeOrder($event)" class="border rounded p-2 my-2">
+      <option value="0">Por distancia</option>
+      <option value="1">Por nombre</option>
     </select>
     <div class="z-10">
-      <button class="border rounded p-2 m-2 w-44">Material: Cualquiera</button>
-      <ul class="absolute border rounded p-2 mx-2 w-44 bg-white pt-3">
-        <li class="mb-1">
-          <label class="flex items-center">
-            <input id="hierro" type="checkbox" class="mr-2 my-1" />
-            Hierro
-          </label>
-        </li>
-        <li class="mb-1">
-          <label class="flex items-center">
-            <input id="hierro" type="checkbox" class="mr-2" />
-            Plástico
+      <button
+        (click)="materialsClickHandler()"
+        class="border rounded p-2 my-2 flex items-center gap-3"
+      >
+        <span class="whitespace-nowrap">Material</span
+        ><svg
+          class="h-3 w-3"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 448 512"
+        >
+          <path
+            d="M201.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 338.7 54.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"
+          />
+        </svg>
+      </button>
+      <ul
+        *ngIf="showMaterials"
+        class="absolute border rounded p-2 mx-2 w-44 bg-white pt-3"
+      >
+        <li class="mb-1" *ngFor="let material of materials">
+          <label id="{{ material }}" class="flex items-center">
+            <input id="{{ material }}" type="checkbox" class="mr-2 my-1" />
+            {{ material }}
           </label>
         </li>
       </ul>
     </div>
+    <button
+      (click)="filterPoints()"
+      class="rounded-md p-2 bg-blue-700 text-white hover:bg-blue-900 flex items-center gap-2 h-fit"
+    >
+      <svg
+        class="h-3 w-3 fill-white"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 512 512"
+      >
+        <path
+          d="M3.9 54.9C10.5 40.9 24.5 32 40 32H472c15.5 0 29.5 8.9 36.1 22.9s4.6 30.5-5.2 42.5L320 320.9V448c0 12.1-6.8 23.2-17.7 28.6s-23.8 4.3-33.5-3l-64-48c-8.1-6-12.8-15.5-12.8-25.6V320.9L9 97.3C-.7 85.4-2.8 68.8 3.9 54.9z"
+        />
+      </svg>
+      Filtrar
+    </button>
   </div>
   <ul class="overflow-x-hidden">
-    <li class="border-t flex justify-between items-center p-4">
+    <li
+      *ngFor="let filteredPoint of filteredPoints"
+      class="border-t flex justify-between items-center p-4"
+    >
       <div>
-        <h2 class="font-medium text-lg text-gray-700 mb-2">Centro CDE</h2>
-        <p>Barrio La Blanca km 5 1/2</p>
-        <p class="mb-4">Abierto - Cierra a las 5PM</p>
-        <span class="bg-slate-300 rounded-lg px-2 py-1">Hierro</span>
-        <span class="bg-blue-300 rounded-lg px-2 py-1">Plástico</span>
+        <h2 class="font-medium text-lg text-gray-700 mb-2">
+          {{ filteredPoint.name }}
+        </h2>
+        <p>{{ filteredPoint.address }}</p>
+        <p class="mb-4">
+          <span class="text-green-700">Abierto</span> - Cierra a las
+          {{ filteredPoint.closeTime }}
+        </p>
+        <span class="bg-slate-300 rounded-lg px-2 py-1 mx-1">Hierro</span>
+        <span class="bg-blue-300 rounded-lg px-2 py-1 mx-1">Plástico</span>
       </div>
-      <div class="bg-gray-200 w-24 h-24 rounded-md"></div>
-    </li>
-    <li class="border-t flex justify-between items-center p-4">
-      <div>
-        <h2 class="font-medium text-lg text-gray-700 mb-2">Centro CDE</h2>
-        <p>Barrio La Blanca km 5 1/2</p>
-        <p class="mb-4">Abierto - Cierra a las 5PM</p>
-        <span class="bg-slate-300 rounded-lg px-2 py-1">Hierro</span>
-        <span class="bg-blue-300 rounded-lg px-2 py-1">Plástico</span>
-      </div>
-      <div class="bg-gray-200 w-24 h-24 rounded-md"></div>
-    </li>
-    <li class="border-t flex justify-between items-center p-4">
-      <div>
-        <h2 class="font-medium text-lg text-gray-700 mb-2">Centro CDE</h2>
-        <p>Barrio La Blanca km 5 1/2</p>
-        <p class="mb-4">Abierto - Cierra a las 5PM</p>
-        <span class="bg-slate-300 rounded-lg px-2 py-1">Hierro</span>
-        <span class="bg-blue-300 rounded-lg px-2 py-1">Plástico</span>
-      </div>
-      <div class="bg-gray-200 w-24 h-24 rounded-md"></div>
-    </li>
-    <li class="border-t flex justify-between items-center p-4">
-      <div>
-        <h2 class="font-medium text-lg text-gray-700 mb-2">Centro CDE</h2>
-        <p>Barrio La Blanca km 5 1/2</p>
-        <p class="mb-4">Abierto - Cierra a las 5PM</p>
-        <span class="bg-slate-300 rounded-lg px-2 py-1">Hierro</span>
-        <span class="bg-blue-300 rounded-lg px-2 py-1">Plástico</span>
-      </div>
-      <div class="bg-gray-200 w-24 h-24 rounded-md"></div>
+      <div class="bg-gray-200 w-24 h-24 min-w-24 min-h-24 rounded-md"></div>
     </li>
   </ul>
 </div>
 <button
-  class="rounded-md p-2 bg-orange-700 text-white hover:bg-orange-900 absolute right-0 bottom-0 m-5 z-20"
+  (click)="showMenuHandler()"
+  class="md:hidden rounded-md p-2 bg-blue-700 text-white hover:bg-blue-900 absolute right-0 bottom-0 m-5 z-20"
 >
-  Mostrar mapa
+  Mostrar {{ showMenu ? "mapa" : "lista" }}
 </button>
-<div class="hidden md:block sidebar bg-slate-800 z-20">
-  Longitud: {{ lng }} | Latitud: {{ lat }} | Zoom: {{ zoom }}
-</div>
 <div id="map" class="h-screen w-screen"></div>

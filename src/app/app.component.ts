@@ -3,7 +3,22 @@ import { environment } from '../environments/environment';
 import * as mapboxgl from 'mapbox-gl';
 import booleanDisjoint from '@turf/boolean-disjoint';
 import lineIntersect from '@turf/line-intersect';
+import { Firestore, collectionData, collection } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
+
 import buffer from '@turf/buffer';
+
+interface Item {
+  name: string;
+  address: string;
+  closeTime: string;
+  coordinates: any;
+}
+
+type Filter = {
+  order: number;
+  material: string[];
+};
 
 @Component({
   selector: 'app-root',
@@ -11,6 +26,7 @@ import buffer from '@turf/buffer';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
+  item$: Observable<Item[]>;
   recyclingPoints = {
     type: 'FeatureCollection',
     features: [
@@ -20,7 +36,12 @@ export class AppComponent implements OnInit {
           type: 'Point',
           coordinates: [-54.6541, -25.4938],
         },
-        properties: {},
+        properties: {
+          name: 'Centro CDE',
+          address: 'Barrio La Blanca km 5 1/2',
+          state: 'Abierto',
+          closeTime: '5PM',
+        },
       },
       {
         type: 'Feature',
@@ -28,7 +49,12 @@ export class AppComponent implements OnInit {
           type: 'Point',
           coordinates: [-54.6527, -25.4903],
         },
-        properties: {},
+        properties: {
+          name: 'Centro CDE',
+          address: 'Barrio La Blanca km 5 1/2',
+          state: 'Abierto',
+          closeTime: '5PM',
+        },
       },
       {
         type: 'Feature',
@@ -36,7 +62,12 @@ export class AppComponent implements OnInit {
           type: 'Point',
           coordinates: [-54.6558, -25.4871],
         },
-        properties: {},
+        properties: {
+          name: 'Centro CDE',
+          address: 'Barrio La Blanca km 5 1/2',
+          state: 'Abierto',
+          closeTime: '5PM',
+        },
       },
       {
         type: 'Feature',
@@ -44,7 +75,12 @@ export class AppComponent implements OnInit {
           type: 'Point',
           coordinates: [-54.6603, -25.486],
         },
-        properties: {},
+        properties: {
+          name: 'Centro CDE',
+          address: 'Barrio La Blanca km 5 1/2',
+          state: 'Abierto',
+          closeTime: '5PM',
+        },
       },
       {
         type: 'Feature',
@@ -52,37 +88,66 @@ export class AppComponent implements OnInit {
           type: 'Point',
           coordinates: [-54.6684, -25.485],
         },
-        properties: {},
+        properties: {
+          name: 'Centro CDE',
+          address: 'Barrio La Blanca km 5 1/2',
+          state: 'Abierto',
+          closeTime: '5PM',
+        },
       },
     ],
   };
+  filters: Filter = {
+    order: 0,
+    material: [],
+  };
+  materials = ['Hierro', 'Plástico', 'Cobre', 'Madera'];
+  filteredPoints: any = [];
+  showMaterials = false;
   mapbox = mapboxgl as typeof mapboxgl;
   map: mapboxgl.Map;
   style = 'mapbox://styles/mapbox/light-v11';
   lat = -25.4938;
   lng = -54.6541;
   zoom = 15;
-  async getDirections(
-    originPoint: number[],
-    destinyPoint: number[],
-    accessToken: string
-  ) {
-    try {
-      let response = await fetch(
-        `https://api.mapbox.com/directions/v5/mapbox/driving/${originPoint[0]},${originPoint[1]};${destinyPoint[0]},${destinyPoint[1]}?geometries=geojson&access_token=${accessToken}`,
-        { method: 'GET' }
-      );
-      return await response.json();
-    } catch (err) {
-      console.log(err);
+  showMenu = true;
+  constructor(firestore: Firestore) {
+    this.mapbox.accessToken = environment.mapBoxToken;
+    const itemsCollection: any = collection(firestore, 'recycle-point');
+    this.item$ = collectionData(itemsCollection);
+  }
+
+  materialsClickHandler() {
+    this.showMaterials = !this.showMaterials;
+  }
+
+  filterPoints() {
+    if (this.filters.order == 1) {
+      this.filteredPoints = this.filteredPoints.sort((a: any, b: any) => {
+        return b.name.localeCompare(a.name);
+      });
+    } else {
+      this.item$.subscribe((value) => {
+        this.filteredPoints = value;
+      });
     }
   }
 
-  constructor() {
-    this.mapbox.accessToken = environment.mapBoxToken;
+  changeOrder(event: any) {
+    this.filters = { ...this.filters, order: event.target.value };
+  }
+
+  showMenuHandler() {
+    this.showMenu = !this.showMenu;
   }
 
   ngOnInit() {
+    this.item$.subscribe((value) => {
+      console.log(typeof value[0].coordinates);
+      console.log(typeof value[0].coordinates.latitude);
+      this.filteredPoints = value;
+    });
+    console.log(this.filteredPoints);
     this.map = new mapboxgl.Map({
       container: 'map',
       style: this.style,
